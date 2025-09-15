@@ -32,6 +32,29 @@ blogRouter.use('/*', async (c, next) => {
   await next();
 })
 
+//yaha pe pagination krna hai
+blogRouter.get('/bulk', async (c) => {
+  // const body = await c.req.json();
+  const prisma = new PrismaClient({
+    datasourceUrl : c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const blogs = await prisma.blog.findMany({
+    select : {
+      title : true,
+      content : true,
+      id : true,
+      author : {
+        select : {
+          name : true
+        }
+      }
+    }
+  });
+  
+  return c.json({blogs : blogs});
+})
+
 blogRouter.get('/:id', async (c) => {
   const id = c.req.param('id');
   const prisma = new PrismaClient({
@@ -52,23 +75,13 @@ blogRouter.get('/:id', async (c) => {
   return c.json(blog);
 })
 
-blogRouter.get('/bulk', async (c) => {
-  // const body = await c.req.json();
-  const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
-
-  const blog = await prisma.blog.findMany({});
-  
-  return c.json(blog);
-})
 
 blogRouter.post('/', async (c) => {
   const body = await c.req.json();
   const {success} = createBlogInput.safeParse(body);
   if(!success){
     c.status(411);
-    c.json({error : "Invalid inputs"})
+    return c.json({error : "Invalid inputs"})
   }
   const authorId = c.get("userId");
   const prisma = new PrismaClient({
@@ -90,7 +103,7 @@ blogRouter.put('/', async (c) => {
   const {success} = updateBlogInput.safeParse(body);
   if(!success){
     c.status(411);
-    c.json({error : "Invalid inputs"})
+    return c.json({error : "Invalid inputs"})
   }
   const prisma = new PrismaClient({
     datasourceUrl : c.env.DATABASE_URL,

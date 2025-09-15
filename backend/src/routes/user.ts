@@ -42,12 +42,13 @@ userRouter.post('/signup', async (c) => {
   return c.json({jwt : token});
 })
 
+
 userRouter.post('/signin', async (c) => {
   const body = await c.req.json();
   const {success} = signinInput.safeParse(body);
   if(!success){
     c.status(411);
-    c.json({error : "Invalid inputs"});
+    return c.json({error : "Invalid inputs"});
   }
 
   const prisma = new PrismaClient({
