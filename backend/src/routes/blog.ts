@@ -64,6 +64,16 @@ blogRouter.get('/:id', async (c) => {
   const blog = await prisma.blog.findUnique({
     where : {
       id :  Number(id),
+    },
+    select : {
+      id : true,
+      title : true,
+      content : true,
+      author : {
+        select : {
+          name : true
+        }
+      }
     }
   });
 
@@ -72,7 +82,7 @@ blogRouter.get('/:id', async (c) => {
     return c.json({error : "not found"});
   }
 
-  return c.json(blog);
+  return c.json({blog : blog});
 })
 
 

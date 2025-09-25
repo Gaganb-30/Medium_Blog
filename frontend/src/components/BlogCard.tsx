@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
 interface BlogCardProps {
-  id : number
-  authorName : string;
-  title : string;
-  content : string;
-  publishDate : string;  
+  id: number;
+  authorName: string;
+  title: string;
+  content: string;
+  publishDate: string;
 }
 
 const BlogCard = ({
@@ -14,7 +14,7 @@ const BlogCard = ({
   title,
   content,
   publishDate,
-} : BlogCardProps) => {
+}: BlogCardProps) => {
   return (
     <Link to={`/blog/${id}`}>
       <div className="border-b-2 border-slate-200 p-4 w-screen max-w-screen-sm cursor-pointer">
@@ -30,33 +30,42 @@ const BlogCard = ({
             {publishDate}
           </div>
         </div>
-        <div className="text-2xl font-semibold pt-2">
-          {title}
-        </div>
-        <div className="text-md ">
-          {content.slice(0, 100) + "..."}
-        </div>
+        <div className="text-2xl font-semibold pt-2">{title}</div>
+        <div className="text-md ">{content.slice(0, 100) + "..."}</div>
         <div className="text-slate-600 text-sm font-thin pt-4">
           {`${Math.ceil(content.length / 200)} min read`}
         </div>
-        {/* <div className="bg-slate-200 h-1 w-full"></div> */}
       </div>
     </Link>
-  )
+  );
+};
+
+export function Circle() {
+  return <div className="h-1 w-1 rounded-full bg-slate-400"></div>;
 }
 
-function Circle() {
-  return <div className="h-1 w-1 rounded-full bg-slate-400">
-
-  </div>
+export function Avatar({
+  name,
+  size = "small",
+}: {
+  name: string;
+  size?: "small" | "big";
+}) {
+  return (
+    <div
+      className={`relative inline-flex items-center justify-center overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 ${
+        size === "small" ? "w-6 h-6" : "w-10 h-10"
+      }`}
+    >
+      <span
+        className={`text-gray-600 dark:text-gray-300 font text-${
+          size === "small" ? "sm" : "xl"
+        }`}
+      >
+        {name[0]}
+      </span>
+    </div>
+  );
 }
 
-export function Avatar({name, size = "small"} : {name : string; size? : "small" | "big"}){
-  return <div className={`relative inline-flex items-center justify-center overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 ${size === "small" ? "w-6 h-6" : "w-10 h-10" }`}>
-    <span className={`text-gray-600 dark:text-gray-300 font text-${size === "small" ? "sm" : "xl" }`}>{name[0]}</span>
-</div>
-}
-
-
-
-export default BlogCard
+export default BlogCard;
