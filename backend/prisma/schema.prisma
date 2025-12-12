@@ -29,6 +29,7 @@ model User {
   password String
   name     String?
   blogs    Blog[]
+  comments Comment[]
 }
 
 model Blog {
@@ -38,4 +39,15 @@ model Blog {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
+  comments Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    Int
 }
